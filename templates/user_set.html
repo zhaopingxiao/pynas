@@ -1,0 +1,324 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户设置 - PYNAS</title>
+    <link rel="icon" href="/static/logo_grey.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e0f7ff 0%, #f5f9ff 100%);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.28);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px;
+            padding: 44px 40px;
+            box-shadow: 0 8px 36px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            width: 100%;
+            max-width: 680px;
+            margin-top: 40px;
+        }
+
+        .logo {
+            font-size: 40px;
+            font-weight: 700;
+            color: #1a73e8;
+            margin-bottom: 8px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #202124;
+            margin-bottom: 32px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.45);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.25s ease;
+        }
+
+        .section:hover {
+            background: rgba(255, 255, 255, 0.55);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .section h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #202124;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section h2::before {
+            content: "•";
+            color: #1a73e8;
+            font-size: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #444;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            font-size: 15px;
+            background: rgba(255, 255, 255, 0.85);
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.18);
+            background: #fff;
+        }
+
+        .btn {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            width: 100%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn:hover {
+            background-color: #0d5bbc;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(26, 115, 232, 0.25);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .btn-danger {
+            background-color: #d93025;
+        }
+
+        .btn-danger:hover {
+            background-color: #b8271d;
+            box-shadow: 0 3px 8px rgba(217, 48, 37, 0.25);
+        }
+
+        .user-list {
+            list-style: none;
+            margin-bottom: 16px;
+        }
+
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.75);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            transition: all 0.2s ease;
+        }
+
+        .user-item:hover {
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #202124;
+            font-size: 15px;
+        }
+
+        .user-role {
+            font-size: 13px;
+            color: #5f6368;
+            background: rgba(26, 115, 232, 0.1);
+            padding: 2px 8px;
+            border-radius: 6px;
+            width: fit-content;
+        }
+
+        .user-role.admin {
+            background: rgba(217, 48, 37, 0.1);
+            color: #d93025;
+        }
+
+        .message {
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .message.success {
+            background-color: rgba(52, 168, 83, 0.12);
+            color: #137333;
+            border: 1px solid rgba(52, 168, 83, 0.2);
+        }
+
+        .message.error {
+            background-color: rgba(217, 48, 37, 0.12);
+            color: #b8271d;
+            border: 1px solid rgba(217, 48, 37, 0.2);
+        }
+
+        .back-link {
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+            margin-top: 12px;
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #0d5bbc;
+            text-decoration: underline;
+        }
+
+        form[style] {
+            display: inline !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo"><img src="/static/logo_grey.png" alt="PYNAS" style="width: 120px;"></div>
+        <h1 class="page-title">用户设置</h1>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        
+        <div class="section">
+            <h2>用户列表</h2>
+            <ul class="user-list">
+                {% for user in users %}
+                <li class="user-item">
+                    <div class="user-info">
+                        <span class="user-name">{{ user.username }}</span>
+                        <span class="user-role {% if user.role == 'admin' %}admin{% endif %}">{{ user.role }}</span>
+                    </div>
+                    <div>
+                        <form action="/users_setting" method="post" style="display: inline;">
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="username" value="{{ user.username }}">
+                            <button type="submit" class="btn btn-danger" {% if user.role == 'admin' and admin_count <= 1 %}disabled{% endif %}>删除</button>
+                        </form>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <!-- 添加用户 -->
+        <div class="section">
+            <h2>添加用户</h2>
+            <form action="/users_setting" method="post">
+                <input type="hidden" name="action" value="add">
+                <div class="form-group">
+                    <label for="new-username">用户名</label>
+                    <input type="text" id="new-username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="new-password">密码</label>
+                    <input type="password" id="new-password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="role">角色</label>
+                    <select id="role" name="role">
+                        <option value="user">普通用户</option>
+                        <option value="admin">管理员</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">添加用户</button>
+            </form>
+        </div>
+        
+        <div class="section">
+            <h2>修改密码</h2>
+            <form action="/users_setting" method="post">
+                <input type="hidden" name="action" value="change_password">
+                <div class="form-group">
+                    <label for="change-username">用户名</label>
+                    <input type="text" id="change-username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="new-pwd">新密码</label>
+                    <input type="password" id="new-pwd" name="new_password" required>
+                </div>
+                <button type="submit" class="btn">修改密码</button>
+            </form>
+        </div>
+        
+        <a href="/home" class="back-link">← 返回管理员页</a>
+    </div>
+</body>
+</html>

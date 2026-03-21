@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PYNAS 桌面</title>
+<link rel="icon" href="/static/logo_grey.png">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  body {
+    background-image: url('/background');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  .app-dock {
+    position: fixed;
+    top: 30px;
+    left: 30px;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(auto-fill, 70px);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-height: 85vh;
+    align-content: start;
+  }
+
+  .app-item {
+    width: 70px;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+    font-size: 12px;
+    text-decoration: none;
+    transition: 0.2s;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .app-item:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+  }
+
+  .app-icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+
+  .window {
+    position: absolute;
+    width: 420px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    border: 11px solid rgba(255, 255, 255, 0.4);
+    display: none;
+    z-index: 999;
+    overflow: hidden;
+  }
+
+  .window-header {
+    padding: 16px 22px;
+    background: rgba(255, 255, 255, 0.6);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: move;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .window-title {
+    font-weight: 600;
+    font-size: 15px;
+    color: #111;
+  }
+
+  .window-close {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #ff5f57;
+    border: none;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .window-close:hover {
+    background: #ff3b30;
+    transform: scale(1.08);
+  }
+
+  .window-body {
+    padding: 28px 24px;
+    color: #222;
+    line-height: 1.7;
+    font-size: 14px;
+  }
+
+  .window-body a {
+    display: inline-block;
+    margin: 6px 0;
+    padding: 6px 14px;
+    background: rgba(0, 122, 255, 0.1);
+    color: #007aff;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: 0.2s;
+  }
+  .window-body a:hover {
+    background: rgba(0, 122, 255, 0.18);
+  }
+
+  .setting-item {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+  .setting-item:last-child {
+    border-bottom: none;
+  }
+</style>
+</head>
+
+<body>
+  <div class="app-dock">
+    <a id="settings" class="app-item" onclick="openWindow('settingsWindow')">
+      <div class="app-icon">⚙️</div>
+      设置
+    </a>
+  </div>
+
+  <div class="window" id="settingsWindow">
+    <div class="window-header">
+      <div class="window-title">系统设置</div>
+      <button class="window-close" onclick="closeWindow('settingsWindow')">×</button>
+    </div>
+    <div class="window-body">
+      <div class="setting-item">
+      {% if is_admin %}
+        <p>• 管理员选项</p>
+        <a href="/users_setting">用户管理</a>
+      {% endif %}
+        <p>• 用户选项</p>
+        <a href="/un_login">退出登录</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+function openWindow(windowid){
+  document.getElementById(windowid).style.display = 'block';
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  document.getElementById(windowid).style.left = (w - 420)/2 + 'px';
+  document.getElementById(windowid).style.top = (h - 300)/2 + 'px';
+};
+
+function closeWindow(windowid){
+  document.getElementById(windowid).style.display = 'none';
+};
+
+let pos1=0,pos2=0,pos3=0,pos4=0;
+function dragWindow(windowid){
+    document.getElementById(windowid).querySelector('.window-header').onmousedown = function(e){
+      e.preventDefault();
+      pos3 = e.clientX;
+      pos4 = e.clientY;
+      document.onmouseup = () => document.onmousemove = null;
+      document.onmousemove = function(e){
+        e.preventDefault();
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.getElementById(windowid).style.top = (document.getElementById(windowid).offsetTop - pos2)+'px';
+        document.getElementById(windowid).style.left = (document.getElementById(windowid).offsetLeft - pos1)+'px';
+      };
+  };
+}
+dragWindow('settingsWindow');
+</script>
+
+</body>
+</html>
